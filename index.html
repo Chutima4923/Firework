@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fire & Smoke Detection Dashboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    .status-box {
+      background-color: #f0f0f0;
+      padding: 20px;
+      margin: 20px auto;
+      width: 400px;
+    }
+    .detection-image {
+      width: 300px;
+      height: 200px;
+      background-color: #e0e0e0;
+      margin: 20px auto;
+      line-height: 200px;
+    }
+    .graph {
+      width: 400px;
+      height: 200px;
+      background-color: #f8f8f8;
+      margin: 20px auto;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fire & Smoke Detection Dashboard</h1>
+  <p>Connected</p>
+
+  <div class="status-box">
+    <h2>สถานะการตรวจจับ</h2>
+    <p>🔥 Fire: <span id="fire-status">Loading...</span></p>
+    <p>💨 Smoke: <span id="smoke-status">Loading...</span></p>
+    <p>⏱️ Timestamp: <span id="timestamp">Loading...</span></p>
+  </div>
+
+  <div class="detection-image" id="detection-image">Detection Image will appear here</div>
+
+  <input type="file" id="image-upload" accept="image/*">
+  <button id="upload-button">อัปโหลด</button>
+
+  <div class="graph">
+    <canvas id="fire-events-graph" width="400" height="200"></canvas>
+  </div>
+
+  <button id="save-button">Save Image</button>
+
+  <script>
+    // จำลองการโหลดข้อมูล
+    setTimeout(() => {
+      document.getElementById("fire-status").textContent = "No Fire Detected";
+      document.getElementById("smoke-status").textContent = "No Smoke Detected";
+      document.getElementById("timestamp").textContent = new Date().toLocaleString();
+    }, 2000);
+
+    // อัปโหลดรูปภาพ
+    document.getElementById("upload-button").addEventListener("click", () => {
+      const fileInput = document.getElementById("image-upload");
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          document.getElementById("detection-image").style.backgroundImage = `url(${event.target.result})`;
+          document.getElementById("detection-image").textContent = ""; // ล้างข้อความ placeholder
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // สร้างกราฟ
+    const ctx = document.getElementById("fire-events-graph").getContext("2d");
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["1", "2", "3", "4", "5", "6"],
+        datasets: [{
+          label: "Fire Events",
+          data: [0.2, 0.5, 0.8, 0.6, 0.9, 0.3],
+          borderColor: "red",
+          fill: false,
+        }],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 1,
+          },
+        },
+      },
+    });
+
+    // บันทึกรูปภาพ (ยังไม่ได้ใช้งานจริง)
+    document.getElementById("save-button").addEventListener("click", () => {
+      alert("Save Image Clicked!"); // แทนที่ด้วยโค้ดบันทึกรูปภาพจริง
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</body>
+</html>
